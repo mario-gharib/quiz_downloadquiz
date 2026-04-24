@@ -1,10 +1,18 @@
 <?php
-// This file is part of Moodle - https://moodle.org/.
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Grant management form for quiz_downloadquiz.
@@ -25,7 +33,6 @@ require_once($GLOBALS['CFG']->libdir . '/formslib.php');
  * Form for creating or updating timed access grants.
  */
 final class grant_form extends \moodleform {
-
     /**
      * Define the form elements.
      *
@@ -62,10 +69,16 @@ final class grant_form extends \moodleform {
             $useremail = trim(\core_text::strtolower((string) $data['useremail']));
         }
 
-        if ($useremail !== '' && !$DB->record_exists('user', [
-            'email' => $useremail,
-            'deleted' => 0,
-        ])) {
+        if (
+                $useremail !== '' &&
+                !$DB->record_exists(
+                    'user',
+                    [
+                        'email' => $useremail,
+                        'deleted' => 0,
+                    ]
+                )
+        ) {
             $errors['useremail'] = get_string('errorusernotfound', 'quiz_downloadquiz');
         }
 

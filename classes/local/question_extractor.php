@@ -1,10 +1,18 @@
 <?php
-// This file is part of Moodle - https://moodle.org/.
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Extract quiz questions and answer-key data.
@@ -17,13 +25,10 @@
 
 namespace quiz_downloadquiz\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Extracts exportable quiz structure and answer data.
  */
 final class question_extractor {
-
     /**
      * Moodle database instance.
      *
@@ -164,9 +169,15 @@ final class question_extractor {
             return get_string('yes', 'quiz_downloadquiz');
         }
 
-        $dbman = $this->db->get_manager();
-        if ($dbman->table_exists('quizaccess_seb_quizsettings') &&
-                $this->db->record_exists('quizaccess_seb_quizsettings', ['quizid' => (int) $quiz->id])) {
+        if (
+                $dbman->table_exists('quizaccess_seb_quizsettings') &&
+                $this->db->record_exists(
+                    'quizaccess_seb_quizsettings',
+                    [
+                        'quizid' => (int) $quiz->id,
+                    ]
+                )
+        ) {
             return get_string('yes', 'quiz_downloadquiz');
         }
 
@@ -185,8 +196,15 @@ final class question_extractor {
         }
 
         $dbman = $this->db->get_manager();
-        if ($dbman->table_exists('quizaccess_onesession') &&
-                $this->db->record_exists('quizaccess_onesession', ['quizid' => (int) $quiz->id])) {
+        if (
+                $dbman->table_exists('quizaccess_onesession') &&
+                $this->db->record_exists(
+                    'quizaccess_onesession',
+                    [
+                        'quizid' => (int) $quiz->id,
+                    ]
+                )
+        ) {
             return get_string('yes', 'quiz_downloadquiz');
         }
 
@@ -496,7 +514,7 @@ final class question_extractor {
             ];
         }
 
-        $correctcount = count(array_filter($data['answers'], static function(array $item): bool {
+        $correctcount = count(array_filter($data['answers'], static function (array $item): bool {
             return !empty($item['iscorrect']);
         }));
 
@@ -531,7 +549,7 @@ final class question_extractor {
             } else if ($raw === 'false' || $raw === '0') {
                 $label = get_string('false', 'quiz_downloadquiz');
             } else {
-                // Fallback (very rare)
+                // Fallback (very rare).
                 $label = $this->format_question_html(
                     (string) $row->answer,
                     (int) $row->answerformat,
@@ -791,7 +809,7 @@ final class question_extractor {
             ];
         }
 
-        $correctcount = count(array_filter($data['answers'], static function(array $item): bool {
+        $correctcount = count(array_filter($data['answers'], static function (array $item): bool {
             return !empty($item['iscorrect']);
         }));
 
@@ -875,7 +893,10 @@ final class question_extractor {
             return $data;
         }
 
-        list($insql, $params) = $this->db->get_in_or_equal(array_map('intval', $ids), SQL_PARAMS_QM);
+        [$insql, $params] = $this->db->get_in_or_equal(
+            array_map('intval', $ids),
+            SQL_PARAMS_QM
+        );
 
         $records = $this->db->get_records_sql(
             "SELECT id, qtype, questiontext

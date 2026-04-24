@@ -1,10 +1,18 @@
 <?php
-// This file is part of Moodle - https://moodle.org/.
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * PDF builder for quiz_downloadquiz.
@@ -17,116 +25,10 @@
 
 namespace quiz_downloadquiz\local;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($GLOBALS['CFG']->libdir . '/tcpdf/tcpdf.php');
-
-/**
- * Custom TCPDF class for quiz PDF output.
- */
-class quiz_downloadquiz_pdf extends \TCPDF {
-
-    /**
-     * Warning data used in the page header.
-     *
-     * @var array
-     */
-    protected array $warningdata = [];
-
-    /**
-     * Set warning data.
-     *
-     * @param array $data
-     * @return void
-     */
-    public function set_warning_data(array $data): void {
-        $this->warningdata = $data;
-    }
-
-    /**
-     * Return the appropriate PDF font family based on the current language direction.
-     *
-     * @return string The TCPDF font family name.
-     */
-    protected function get_pdf_font_family(): string {
-        return right_to_left() ? 'amirib' : 'freesans';
-    }
-
-    /**
-     * Return the appropriate text alignment based on the current language direction.
-     * 
-     * @return string The TCPDF alignment value.
-     */
-    protected function get_pdf_alignment(): string {
-        return right_to_left() ? 'R' : 'L';
-    }
-
-    /**
-     * PDF header.
-     *
-     * @return void
-     */
-    public function Header(): void {
-        if (empty($this->warningdata) || $this->getPage() === 1) {
-            return;
-        }
-
-        $fullname = $this->warningdata['userfullname'] ?? '';
-        $email = $this->warningdata['useremail'] ?? '';
-        $generatedat = $this->warningdata['generatedat'] ?? '';
-        $servertimezone = $this->warningdata['servertimezone'] ?? '';
-
-        $userdetails = trim($fullname . ($email !== '' ? ' (' . $email . ')' : ''));
-        if ($generatedat !== '') {
-            $userdetails .= ' ' . get_string('generatedon', 'quiz_downloadquiz') . ' ' . $generatedat;
-        }
-        if ($servertimezone !== '') {
-            $userdetails .= ' (' . $servertimezone . ')';
-        }
-
-        $text = get_string('confidentialnoticeprefix', 'quiz_downloadquiz') . ': ' .
-            get_string('confidentialnoticefull', 'quiz_downloadquiz', (object) [
-                'user' => $userdetails,
-            ]);
-
-        $this->StartTransform();
-        $this->SetAlpha(0.12);
-        $this->SetTextColor(245, 245, 245);
-        $this->SetFont($this->get_pdf_font_family(), '', 7);
-
-        $x = 10;
-        $y = 250;
-
-        $this->Rotate(90, $x, $y);
-        $this->MultiCell(
-            180,
-            0,
-            $text,
-            0,
-            $this->get_pdf_alignment(),
-            false,
-            1,
-            $x,
-            $y,
-            true,
-            0,
-            false,
-            true,
-            0,
-            'T'
-        );
-
-        $this->StopTransform();
-        $this->SetAlpha(1);
-        $this->SetTextColor(0, 0, 0);
-    }
-}
-
 /**
  * PDF builder.
  */
 final class pdf_builder {
-
     /**
      * Main page left margin.
      */
@@ -208,7 +110,7 @@ final class pdf_builder {
 
     /**
      * Return the appropriate text alignment based on the current language direction.
-     *      *
+     *
      * @return string The TCPDF alignment value.
      */
     protected function get_pdf_alignment(): string {
@@ -221,12 +123,12 @@ final class pdf_builder {
      * @param string $text
      * @return string
      */
-    private function bidi($text): string {
+    private function bidi(string $text): string {
         if (!right_to_left()) {
             return $text;
         }
 
-        // Unicode RTL embedding
+        // Unicode RTL embedding.
         return "\u{202B}" . $text . "\u{202C}";
     }
 
@@ -250,7 +152,7 @@ final class pdf_builder {
             'a_meta_charset' => 'UTF-8',
             'a_meta_dir' => 'rtl',
             'a_meta_language' => 'ar',
-            'w_page' => 'page'
+            'w_page' => 'page',
         ]);
 
         $pdf->set_warning_data($data);
@@ -617,8 +519,10 @@ final class pdf_builder {
             $height += $this->estimate_ddmarker_overlay_height($question, self::BOX_WIDTH);
         }
 
-        if (($question['qtype'] ?? '') === 'ddimageortext' &&
-                !empty($question['ddimageortextoverlay']['backgroundimage'])) {
+        if (
+                ($question['qtype'] ?? '') === 'ddimageortext' &&
+                !empty($question['ddimageortextoverlay']['backgroundimage'])
+        ) {
             $height += $this->estimate_ddimage_overlay_height($question, self::BOX_WIDTH);
         }
 
@@ -1400,7 +1304,7 @@ final class pdf_builder {
             ' (' . $this->txt($question['qtype'] ?? '') .
             ' | ' . get_string('maxmark', 'quiz_downloadquiz') .
             $this->txt((string) ($question['maxmark'] ?? '')) . ')';
-    
+
         $this->line($pdf, $this->bidi($title), 'B', 11);
 
         $qtext = $this->txt($question['questionhtml'] ?? '');
@@ -1611,7 +1515,9 @@ final class pdf_builder {
 
                 $pdf->SetY($currenty + $maxheight + 2);
             } catch (\Exception $e) {
-                // Ignore image rendering failures and continue.
+                if (debugging('', DEBUG_DEVELOPER)) {
+                    debugging('Image rendering failed: ' . $e->getMessage(), DEBUG_DEVELOPER);
+                }
             }
         }
     }
