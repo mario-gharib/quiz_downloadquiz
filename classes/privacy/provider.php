@@ -27,7 +27,13 @@ namespace quiz_downloadquiz\privacy;
 use core_privacy\local\metadata\collection;
 
 /**
- * Privacy provider for quiz_downloadquiz.
+ * Returns metadata about this plugin's data storage.
+ *
+ * Declares the structure of the quiz_downloadquiz_grants table
+ * for privacy API compliance.
+ *
+ * @param collection $collection The initialized metadata collection.
+ * @return collection The updated metadata collection.
  */
 class provider implements \core_privacy\local\metadata\provider {
     public static function get_metadata(collection $collection): collection {
