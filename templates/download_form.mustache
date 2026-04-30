@@ -1,0 +1,105 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+
+{{!
+    @template quiz_downloadquiz/download_form
+
+    Download form for quiz_downloadquiz.
+
+    Context variables required for this template:
+    * actionurl - Form action URL.
+    * cmid - Course module id.
+    * sesskey - Moodle session key.
+    * label - Field label HTML.
+    * placeholder - Input placeholder.
+    * generatelabel - Generate button label.
+    * showlabel - Show key button label.
+    * hidelabel - Hide key button label.
+    * downloadlabel - Submit button label.
+    * generateicon - Generate icon HTML.
+    * showicon - Show icon HTML.
+
+    Example context (json):
+    {
+        "actionurl": "https://example.com/mod/quiz/report.php",
+        "cmid": 12,
+        "sesskey": "abc123",
+        "label": "PDF access key",
+        "placeholder": "6-character access key",
+        "generatelabel": "Generate access key",
+        "showlabel": "Show access key",
+        "hidelabel": "Hide access key",
+        "downloadlabel": "Send quiz as PDF by email",
+        "generateicon": "<span class=\"icon\">↻</span>",
+        "showicon": "<span class=\"icon\">👁</span>"
+    }
+}}
+
+<form method="post" action="{{actionurl}}" class="quiz-downloadquiz-form" novalidate="novalidate">
+    <input type="hidden" name="id" value="{{cmid}}">
+    <input type="hidden" name="mode" value="downloadquiz">
+    <input type="hidden" name="download" value="1">
+    <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+    <label for="id_pdfkey" class="form-label d-inline-flex align-items-center mb-1">
+        {{{label}}}
+    </label>
+
+    <div class="input-group mb-0" style="max-width: 800px;">
+        <input
+            type="password"
+            name="pdfkey"
+            id="id_pdfkey"
+            class="form-control"
+            autocomplete="new-password"
+            minlength="6"
+            maxlength="32"
+            placeholder="{{placeholder}}"
+            aria-describedby="id_pdfkey_error downloadquiz-generate-btn downloadquiz-toggle-btn"
+            aria-required="true"
+        >
+
+        <div class="input-group-append">
+            <button
+                type="button"
+                class="btn btn-outline-secondary"
+                id="downloadquiz-generate-btn"
+                title="{{generatelabel}}"
+                aria-label="{{generatelabel}}">
+                {{{generateicon}}}
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline-secondary"
+                id="downloadquiz-toggle-btn"
+                title="{{showlabel}}"
+                aria-label="{{showlabel}}"
+                data-show-label="{{showlabel}}"
+                data-hide-label="{{hidelabel}}">
+                {{{showicon}}}
+            </button>
+        </div>
+    </div>
+
+    <div id="id_pdfkey_error"
+         class="form-control-feedback invalid-feedback mt-1"
+         style="display:none;">
+    </div>
+
+    <input type="submit" class="btn btn-primary mt-3" value="{{downloadlabel}}">
+</form>
