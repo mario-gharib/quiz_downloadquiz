@@ -27,15 +27,19 @@ namespace quiz_downloadquiz\privacy;
 use core_privacy\local\metadata\collection;
 
 /**
- * Returns metadata about this plugin's data storage.
+ * Privacy Subsystem for downloadquiz with user preferences.
  *
- * Declares the structure of the quiz_downloadquiz_grants table
- * for privacy API compliance.
- *
- * @param collection $collection The initialized metadata collection.
- * @return collection The updated metadata collection.
+ * @copyright  2026 Center for Digital Innovation and Artificial Intelligence <moodle.cinia@usj.edu.lb>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements \core_privacy\local\metadata\provider {
+
+    /**
+     * Returns meta data about this plugin's data storage.
+     *
+     * @param collection $collection The initialized metadata collection.
+     * @return collection The updated metadata collection.
+     */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
             'quiz_downloadquiz_grants',
