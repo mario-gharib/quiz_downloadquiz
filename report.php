@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Quiz report implementation for quiz_downloadquiz.
@@ -417,7 +417,6 @@ class quiz_downloadquiz_report extends report_base {
      * @param \cm_info $cm The course module.
      * @return string
      */
-
     private function render_download_form(\cm_info $cm): string {
         global $OUTPUT, $PAGE;
 
@@ -456,5 +455,5 @@ class quiz_downloadquiz_report extends report_base {
         ]]);
 
         return $OUTPUT->render_from_template('quiz_downloadquiz/download_form', $templatedata);
-    }    
+    }
 }
