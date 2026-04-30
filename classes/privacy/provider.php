@@ -8,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Privacy provider for quiz_downloadquiz.
@@ -24,17 +24,13 @@
 
 namespace quiz_downloadquiz\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_privacy\local\metadata\collection;
 
 /**
  * Privacy provider for quiz_downloadquiz.
  */
 class provider implements \core_privacy\local\metadata\provider {
-
     public static function get_metadata(collection $collection): collection {
-
         $collection->add_database_table(
             'quiz_downloadquiz_grants',
             [
